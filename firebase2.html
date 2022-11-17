@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="firebase2.css" />
+    <link rel="stylesheet" href="firebase3.css" />
   </head>
   <body>
-    <form onsubmit="submitForm(this); return false;">
-      <input type="text" name="nick" value="kim" />
-      <input type="text" name="message" value="" />
-      <input type="submit" value="send data" />
+    <div id="message-list"></div>
+    <form onsubmit="sendMessage(this); return false;">
+      <input type="text" name="name" placeholder="name" size="5" />
+      <input type="text" name="text" placeholder="text" size="30" />
+      <input type="submit" value="send" />
     </form>
-    <div id="chat-app"></div>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="firebase2.js"></script>
+  <script src="firebase3.js"></script>
 </html>

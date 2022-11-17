@@ -12,35 +12,23 @@ firebase.initializeApp(firebaseConfig);
 
 // 데이터베이스에 있는 루트폴더에 접근
 // rootRef -> 루트 디렉토리
-var messageRef = firebase.database().ref("/messages");
+var messagesRef = firebase.database().ref("/messages");
 
-function submitForm(form) {
-  if (form.nick.value == "") {
-    alert("enter your nickname");
-    form.nick.focus();
-
-    return false;
-  }
-
-  if (form.message.value == "") {
-    alert("enter your message");
-    form.message.focus();
-
-    return false;
-  }
-
-  var message = {
-    writer: form.nick.value,
-    text: form.message.value,
+function sendMessage(form) {
+  var newMsg = {
+    name: form.name.value,
+    text: form.text.value,
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
 
-  form.message.value = "";
+  messagesRef.push(newMsg);
 
-  messageRef.push(message);
+  form.text.value = "";
 }
 
-messageRef.on("child_added", function (snapshots) {
-  var message = snapshots.val();
-  var html = "<div>" + message.writer + " : " + message.text + "</div>";
-  $("#chat-app").append(html);
+messagesRef.on("child_added", function (snapshots) {
+  var msg = snapshots.val();
+
+  var html = "<div>" + msg.name + ":" + msg.text + "</div>";
+  $("#message-list").append(html);
 });
