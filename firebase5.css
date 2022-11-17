@@ -1,9 +1,18 @@
-.form {
+form {
   border: 1px solid black;
   padding: 10px;
   margin: 10px;
 }
 
+h2 {
+  margin: 0;
+}
+
 #after-login {
+  display: none;
+}
+
+#before-verify,
+#after-verify {
   display: none;
 }

@@ -10,6 +10,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var auth = firebase.auth();
+var user = null;
 
 function signup(form) {
   var email = form.email.value;
@@ -18,7 +19,21 @@ function signup(form) {
   auth
     .createUserWithEmailAndPassword(email, password)
     .then(function () {
-      alert("succeed!");
+      alert("signup succeed!");
+    })
+    .catch(function (error) {
+      alert(error.message);
+    });
+}
+
+function login(form) {
+  var email = form.email.value;
+  var password = form.password.value;
+
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(function () {
+      alert("login succeed!");
     })
     .catch(function (error) {
       alert(error.message);
@@ -31,12 +46,35 @@ auth.onAuthStateChanged(function (user) {
 
     $("#before-login").hide();
     $("#after-login").show();
+
+    if (user.emailVerified) {
+      $("#before-verify").hide();
+      $("#after-verify").show();
+    } else {
+      $("#before-verify").show();
+      $("#after-verify").hide();
+    }
+
+    window.user = user;
   } else {
     $("#before-login").show();
     $("#after-login").hide();
+
+    window.user = null;
   }
 });
 
 function logout() {
-  auth.signout();
+  auth.signOut();
+}
+
+function sendverifyemail() {
+  user
+    .sendEmailVerification()
+    .then(function () {
+      alert("Send Verify");
+    })
+    .catch(function (error) {
+      alert(error.message);
+    });
 }
