@@ -1,0 +1,51 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyDAy67TqRwuMV-7vAPIIQ5U_24Gh1yEek4",
+  authDomain: "exam01-93d61.firebaseapp.com",
+  databaseURL: "https://exam01-93d61-default-rtdb.firebaseio.com",
+  projectId: "exam01-93d61",
+  storageBucket: "exam01-93d61.appspot.com",
+  messagingSenderId: "5760955590",
+  appId: "1:5760955590:web:d68e003ba9b6dc357913c7",
+};
+// initialize firebase
+firebase.initializeApp(firebaseConfig);
+
+// reference your database
+var contactFormDB = firebase.database().ref("contactForm");
+
+document.getElementById("contactForm").addEventListener("submit", submitForm);
+
+function submitForm(e) {
+  e.preventDefault();
+
+  var name = getElementVal("name");
+  var emailid = getElementVal("emailid");
+  var msgContent = getElementVal("msgContent");
+
+  saveMessages(name, emailid, msgContent);
+
+  //   enable alert
+  document.querySelector(".alert").style.display = "block";
+
+  //   remove the alert
+  setTimeout(() => {
+    document.querySelector(".alert").style.display = "none";
+  }, 3000);
+
+  //   reset the form
+  document.getElementById("contactForm").reset();
+}
+
+const saveMessages = (name, emailid, msgContent) => {
+  var newContactForm = contactFormDB.push();
+
+  newContactForm.set({
+    name: name,
+    emailid: emailid,
+    msgContent: msgContent,
+  });
+};
+
+const getElementVal = (id) => {
+  return document.getElementById(id).value;
+};
