@@ -5,6 +5,7 @@
 
 #message-list {
   border: 2px solid black;
-  min-height: 300px;
+  height: 300px;
+  overflow: auto;
   margin-bottom: 10px;
 }

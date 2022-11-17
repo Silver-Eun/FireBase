@@ -12,6 +12,7 @@ firebase.initializeApp(firebaseConfig);
 
 // 데이터베이스에 있는 루트폴더에 접근
 // rootRef -> 루트 디렉토리
+
 var messagesRef = firebase.database().ref("/messages");
 
 function sendMessage(form) {
@@ -26,9 +27,14 @@ function sendMessage(form) {
   form.text.value = "";
 }
 
-messagesRef.on("child_added", function (snapshots) {
-  var msg = snapshots.val();
+messagesRef
+  .orderByChild("timestamp")
+  .startAt(new Date().getTime())
+  .on("child_added", function (snapshots) {
+    var msg = snapshots.val();
 
-  var html = "<div>" + msg.name + ":" + msg.text + "</div>";
-  $("#message-list").append(html);
-});
+    var html = "<div>" + msg.name + ": " + msg.text + "</div>";
+    $("#message-list").append(html);
+    var messageListScrollHeight = $("#message-list").prop("scrollHeight");
+    $("#message-list").scrollTop(messageListScrollHeight);
+  });
