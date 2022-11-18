@@ -9,15 +9,80 @@ const firebaseConfig = {
 };
 // initialize firebase
 firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
+var messagesRef = null;
+var auth = firebase.auth();
+var user = null;
 
-// 데이터베이스에 있는 루트폴더에 접근
-// rootRef -> 루트 디렉토리
+function signup(form) {
+  var email = form.email.value;
+  var password = form.password.value;
 
-var messagesRef = firebase.database().ref("/messages");
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(function () {
+      alert("signup succeed!");
+    })
+    .catch(function (error) {
+      alert(error.message);
+    });
+}
+
+function login(form) {
+  var email = form.email.value;
+  var password = form.password.value;
+
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(function () {
+      alert("login succeed!");
+    })
+    .catch(function (error) {
+      alert(error.message);
+    });
+}
+
+auth.onAuthStateChanged(function (user) {
+  if (user) {
+    $("#login-email").text(user.email);
+
+    $("#before-login").hide();
+    $("#after-login").show();
+
+    window.user = user;
+    messagesRef = firebase.database().ref("/messages");
+
+    messagesRef
+      .orderByChild("timestamp")
+      .startAt(new Date().getTime())
+      .on("child_added", function (snapshots) {
+        var msg = snapshots.val();
+
+        var html = "<div>" + msg.name + ": " + msg.text + "</div>";
+        $("#message-list").append(html);
+        var messageListScrollHeight = $("#message-list").prop("scrollHeight");
+        $("#message-list").scrollTop(messageListScrollHeight);
+      });
+  } else {
+    $("#before-login").show();
+    $("#after-login").hide();
+
+    window.user = null;
+
+    if (messagesRef != null) {
+      messagesRef.off();
+    }
+    messagesRef = null;
+  }
+});
+
+function logout() {
+  auth.signOut();
+}
 
 function sendMessage(form) {
   var newMsg = {
-    name: form.name.value,
+    name: user.email,
     text: form.text.value,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
@@ -26,15 +91,3 @@ function sendMessage(form) {
 
   form.text.value = "";
 }
-
-messagesRef
-  .orderByChild("timestamp")
-  .startAt(new Date().getTime())
-  .on("child_added", function (snapshots) {
-    var msg = snapshots.val();
-
-    var html = "<div>" + msg.name + ": " + msg.text + "</div>";
-    $("#message-list").append(html);
-    var messageListScrollHeight = $("#message-list").prop("scrollHeight");
-    $("#message-list").scrollTop(messageListScrollHeight);
-  });
