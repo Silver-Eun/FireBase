@@ -4,36 +4,39 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="firebase9.css" />
+    <link rel="stylesheet" href="firebase10.css" />
   </head>
   <body>
     <ul id="memo-list">
-      <li class="memo-item active">
-        memo
+      <!-- <li class="memo-item" data-key="abc">
+        <p class="memo">memo</p>
         <div class="controls">
-          <button type="button">Add</button>
-          <button type="button">Modify</button>
+          <button type="button" onclick="edit('abc')">Edit</button>
+          <button type="button" onclick="remove('abc')">Remove</button>
         </div>
       </li>
       <li class="memo-item">
         <p class="memo">memo</p>
       </li>
-      <li class="memo-item">memo</li>
+      <li class="memo-item">
+        <p class="memo">memo</p>
+      </li> -->
     </ul>
 
-    <form action="">
+    <form id="add-form" onsubmit="addMemo(this); return false">
       <h2>Add Memo</h2>
       <input type="text" name="memo" placeholder="memo text" required />
       <div class="controls">
-        <button type="button">Add</button>
+        <button type="submit">Add</button>
       </div>
     </form>
 
-    <form action="">
-      <h2>Modify Memo</h2>
+    <form id="edit-form" onsubmit="editMemo(this); return false;">
+      <h2>Edit Memo</h2>
       <input type="text" name="memo" placeholder="memo text" required />
       <div class="controls">
-        <button type="button">Modify</button>
+        <button type="submit">Edit</button>
+        <button type="button" onclick="doneEdit()">Cancel</button>
       </div>
     </form>
   </body>
@@ -41,4 +44,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase-auth.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase-database.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="firebase10.js"></script>
 </html>

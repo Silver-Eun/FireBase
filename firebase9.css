@@ -35,3 +35,7 @@ input[name="memo"] {
   text-align: right;
   margin-top: 10px;
 }
+
+#edit-form {
+  display: none;
+}
