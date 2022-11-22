@@ -39,3 +39,7 @@ input[name="memo"] {
 #edit-form {
   display: none;
 }
+
+#after-login {
+  display: none;
+}

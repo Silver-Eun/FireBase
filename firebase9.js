@@ -1,9 +1,84 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyBCA6wuwUiQjxOVmQ8Di0gZeRTvkJVYigg",
+  authDomain: "memo-ac031.firebaseapp.com",
+  databaseURL: "https://memo-ac031-default-rtdb.firebaseio.com",
+  projectId: "memo-ac031",
+  storageBucket: "memo-ac031.appspot.com",
+  messagingSenderId: "1091189624290",
+  appId: "1:1091189624290:web:b35e88c0e62b4ab359fdbb",
+};
+// initialize firebase
+firebase.initializeApp(firebaseConfig);
+
+var database = firebase.database();
+var messagesRef = null;
+var auth = firebase.auth();
+
+function signup(form) {
+  var email = form.email.value;
+  var password = form.password.value;
+
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(function () {
+      alert("signup succeed!");
+    })
+    .catch(function (error) {
+      alert(error.message);
+    });
+}
+
+function login(form) {
+  var email = form.email.value;
+  var password = form.password.value;
+
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(function () {
+      alert("login succeed!");
+    })
+    .catch(function (error) {
+      alert(error.message);
+    });
+}
+
+auth.onAuthStateChanged(function (user) {
+  if (user) {
+    $("#login-email").text(user.email);
+
+    $("#before-login").hide();
+    $("#after-login").show();
+
+    var memoRef = database.ref("/memo/" + user.uid);
+    memoRef.push("hi" + new Date().getTime().toString());
+  } else {
+    $("#before-login").show();
+    $("#after-login").hide();
+  }
+});
+
+function logout() {
+  auth.signOut();
+}
+
+function sendMessage(form) {
+  var newMsg = {
+    name: user.email,
+    text: form.text.value,
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
+  };
+
+  messagesRef.push(newMsg);
+
+  form.text.value = "";
+}
+
 function makeMemo(key, memo) {
   var $li = $('<li class="memo-item" data-key="' + key + '" />');
   var $p = $('<p class="memo">' + memo + "</p>");
   var $div = $('<div class="controls" />');
-  var $editBtn = $('<button type="button" onclick="edit(\'' + key + "')\">수정</button>");
-  var $removeBtn = $('<button type="button" onclick="remove(\'' + key + "')\">삭제</button>");
+  var $editBtn = $('<button type="button" onclick="edit(\'' + key + "')\">Edit</button>");
+  var $removeBtn = $('<button type="button" onclick="remove(\'' + key + "')\">Remove</button>");
 
   $div.append($editBtn, " ", $removeBtn);
   $li.append($p, $div);

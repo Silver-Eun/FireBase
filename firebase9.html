@@ -4,45 +4,58 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="firebase10.css" />
+    <link rel="stylesheet" href="firebase11.css" />
   </head>
   <body>
-    <ul id="memo-list">
-      <!-- <li class="memo-item" data-key="abc">
-        <p class="memo">memo</p>
+    <div id="before-login">
+      <form onsubmit="signup(this); return false;">
+        <h2>signup</h2>
+        <input type="email" name="email" placeholder="email" required />
+        <input type="password" name="password" placeholder="password" required />
+        <input type="submit" value="signup" />
+      </form>
+
+      <form onsubmit="login(this); return false;">
+        <h2>login</h2>
+        <input type="email" name="email" placeholder="email" required />
+        <input type="password" name="password" placeholder="password" required />
+        <input type="submit" value="login" />
+      </form>
+    </div>
+
+    <div id="after-login">
+      login succeed!
+      <span id="login-email"></span>
+      <button type="button" onclick="logout()">logout</button>
+
+      <div id="message-list"></div>
+      <form onsubmit="sendMessage(this); return false;">
+        <input type="text" name="text" placeholder="text" size="30" />
+        <input type="submit" value="send" />
+      </form>
+
+      <ul id="memo-list"></ul>
+      <form id="add-form" onsubmit="addMemo(this); return false">
+        <h2>Add Memo</h2>
+        <input type="text" name="memo" placeholder="memo text" required />
         <div class="controls">
-          <button type="button" onclick="edit('abc')">Edit</button>
-          <button type="button" onclick="remove('abc')">Remove</button>
+          <button type="submit">Add</button>
         </div>
-      </li>
-      <li class="memo-item">
-        <p class="memo">memo</p>
-      </li>
-      <li class="memo-item">
-        <p class="memo">memo</p>
-      </li> -->
-    </ul>
+      </form>
 
-    <form id="add-form" onsubmit="addMemo(this); return false">
-      <h2>Add Memo</h2>
-      <input type="text" name="memo" placeholder="memo text" required />
-      <div class="controls">
-        <button type="submit">Add</button>
-      </div>
-    </form>
-
-    <form id="edit-form" onsubmit="editMemo(this); return false;">
-      <h2>Edit Memo</h2>
-      <input type="text" name="memo" placeholder="memo text" required />
-      <div class="controls">
-        <button type="submit">Edit</button>
-        <button type="button" onclick="doneEdit()">Cancel</button>
-      </div>
-    </form>
+      <form id="edit-form" onsubmit="editMemo(this); return false;">
+        <h2>Edit Memo</h2>
+        <input type="text" name="memo" placeholder="memo text" required />
+        <div class="controls">
+          <button type="submit">Edit</button>
+          <button type="button" onclick="doneEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase-app.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase-auth.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase-database.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="firebase10.js"></script>
+  <script src="firebase11.js"></script>
 </html>
