@@ -11,7 +11,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
-var messagesRef = null;
+var memoRef = null;
 var auth = firebase.auth();
 
 function signup(form) {
@@ -49,28 +49,50 @@ auth.onAuthStateChanged(function (user) {
     $("#before-login").hide();
     $("#after-login").show();
 
-    var memoRef = database.ref("/memo/" + user.uid);
-    memoRef.push("hi" + new Date().getTime().toString());
+    $("#memo-list").empty();
+
+    afterLogin(user);
   } else {
     $("#before-login").show();
     $("#after-login").hide();
+
+    if (memoRef) {
+      memoRef.off();
+    }
+
+    memoRef = null;
   }
 });
 
-function logout() {
-  auth.signOut();
+function afterLogin(user) {
+  memoRef = database.ref("/memo/" + user.uid);
+
+  memoRef.on("child_added", function (snapshot) {
+    var key = snapshot.key;
+    var memo = snapshot.val();
+
+    var $memoItem = makeMemo(key, memo);
+    $("#memo-list").append($memoItem);
+  });
+
+  memoRef.on("child_added", function (snapshot) {
+    var key = snapshot.key;
+    var memo = snapshot.val();
+
+    var $target = $("li.memo-item[data-key=" + key + "] p.memo");
+    $target.text(memo);
+  });
+
+  memoRef.on("child_removed", function (snpashot) {
+    var key = snpashot.key;
+
+    var $target = $("li.memo-item[data-key=" + key + "]");
+    $target.remove();
+  });
 }
 
-function sendMessage(form) {
-  var newMsg = {
-    name: user.email,
-    text: form.text.value,
-    timestamp: firebase.database.ServerValue.TIMESTAMP,
-  };
-
-  messagesRef.push(newMsg);
-
-  form.text.value = "";
+function logout() {
+  auth.signOut();
 }
 
 function makeMemo(key, memo) {
@@ -88,16 +110,17 @@ function makeMemo(key, memo) {
 
 function addMemo(form) {
   var memo = form.memo.value;
-  var $memoItem = makeMemo(new Date().getTime(), memo);
 
-  $("#memo-list").append($memoItem);
+  memoRef.push(memo);
 
   form.reset();
 }
 
 function remove(key) {
-  var $target = $("li.memo-item[data-key=" + key + "]");
-  $target.remove();
+  var remove = {};
+  remove[key] = null;
+
+  memoRef.update(remove);
 
   doneEdit();
 }
@@ -119,7 +142,12 @@ function editMemo(form) {
   var memo = form.memo.value;
 
   var $target = $("li.memo-item.active p.memo");
-  $target.text(memo);
+  var key = $target.data("key");
+
+  var update = {};
+  update[key] = memo;
+
+  memoRef.update(update);
 
   form.reset();
   doneEdit();
