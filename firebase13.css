@@ -1,0 +1,4 @@
+#imagebox > img {
+  width: auto;
+  display: block;
+}

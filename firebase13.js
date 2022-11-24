@@ -11,6 +11,7 @@ firebase.initializeApp(firebaseConfig);
 
 var storage = firebase.storage();
 var imagesRef = storage.ref("/images");
+var progress = document.getElementById("progress");
 
 function upload(form) {
   if (form.image.files.length == 0) {
@@ -30,8 +31,33 @@ function upload(form) {
     return;
   }
 
+  if (image.size > 5 * 1024 * 1024) {
+    alert("upload under 5MB");
+    return;
+  }
+
   var fileRef = imagesRef.child(image.name);
-  fileRef.put(image);
+  var uploadTask = fileRef.put(image);
+  uploadTask.on(
+    "state_changed",
+    function (snapshot) {
+      var current = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      progress.value = current;
+    },
+    function (error) {
+      alert(error.message);
+    },
+    function () {
+      var imagebox = document.getElementById("imagebox");
+      var img = document.createElement("img");
+      img.src = uploadTask.snapshot.downloadURL;
+      img.alt = "upladed image";
+
+      imagebox.appendChild(img);
+
+      alert("succeed");
+    }
+  );
 }
 
 function verifyFileName(filename) {
